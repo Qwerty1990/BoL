@@ -1,7 +1,7 @@
 -- LoL Patch: 5.14
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.0';
+local sVersion = '1.1';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_masterFlash.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
@@ -44,7 +44,18 @@ function OnDraw()
 			if (myHero:CanUseSpell(flashSpell) == READY) then
 				local maxLocation = GetMaxLocation(450);
 				DrawCircle3D(myHero.x, myHero.y, myHero.z, 400, 3, RGBA(200, 200, 0, 254), 100);
-				DrawCircle3D(maxLocation.x, maxLocation.y, maxLocation.z, 50, 3, RGBA(200, 80, 0, 254), 100);
+				
+				local circleColor = RGBA(200, 80, 0, 255);
+				
+				if (theMenu.flashMaxDistanceIfWall) then
+					if (IsBehindWall()) then
+						circleColor = RGBA(0, 255, 0, 255);
+					else
+						circleColor = RGBA(255, 0, 0, 255);
+					end;
+				end;
+				
+				DrawCircle3D(maxLocation.x, maxLocation.y, maxLocation.z, 50, 3, circleColor, 100);
 			end;
 		end;
 	end;
@@ -97,13 +108,32 @@ function InitMenu()
 	if (VIP_USER) then
 		theMenu:addParam('replaceOriginal', 'Replace Original Flash', SCRIPT_PARAM_ONOFF, true);
 	end;
+	theMenu:addParam('flashMaxDistanceIfWall', 'Max Distance Only If Wall', SCRIPT_PARAM_ONOFF, false);
 	theMenu:addParam('showFlashRange', 'Show Flash Range', SCRIPT_PARAM_ONOFF, false);
 end;
 
 function MasterFlash()
 	local maxLocation = GetMaxLocation(425);
 	flashPlease = true;
-	CastSpell(flashSpell, maxLocation.x, maxLocation.z);
+	
+	if (theMenu.flashMaxDistanceIfWall) then
+		if (not IsBehindWall()) then
+			return CastSpell(flashSpell, mousePos.x, mousePos.z);
+		end;
+	end;
+	
+	return CastSpell(flashSpell, maxLocation.x, maxLocation.z);
+end;
+
+function IsBehindWall()
+	for I = 250, 450, 50 do
+		local maxLocation = GetMaxLocation(I);
+		if (CalculatePath(myHero, D3DXVECTOR3(maxLocation.x, maxLocation.y, maxLocation.z)).count ~= 2) and (IsWall(D3DXVECTOR3(maxLocation.x, maxLocation.y, maxLocation.z))) then
+			return true;
+		end;
+	end;
+	
+	return false;
 end;
 
 function GetSpellName(whatSpell)
