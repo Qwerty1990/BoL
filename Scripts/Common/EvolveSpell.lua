@@ -28,7 +28,7 @@ function EvolveSpell(spID)
 		[_R] = 0xAD,
 	};
 	
-	local eP = CLoLPacket(0x009C);
+	local eP = CLoLPacket(0x9C);
 	eP.vTable = 0xEE6D00;
 	eP:EncodeF(myHero.networkID);
 	for I = 1, 4 do
