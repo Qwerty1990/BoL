@@ -1,7 +1,7 @@
 -- LoL Patch: 5.14
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.0';
+local sVersion = '1.1';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_skinChanger.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
@@ -1051,6 +1051,8 @@ function OnLoad()
 	elseif (theMenu['change' .. myHero.charName .. 'Skin']) then
 			SendSkinPacket(myHero.charName, skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']]);
 	end;
+	
+	print('<font color="#FF1493"><b>[p_skinChanger]</b> </font><font color="#00EE00">Loaded Successfully</font>');
 end;
 
 function OnUnload()
@@ -1060,17 +1062,17 @@ function OnUnload()
 end;
 
 function OnTick()
-	if (theMenu['change' .. myHero.charName .. 'Skin']) then
-		if ((GetTickCount() - lastTimeTickCalled) > 200) then
-			lastTimeTickCalled = GetTickCount();
+	if ((GetTickCount() - lastTimeTickCalled) > 200) then
+		lastTimeTickCalled = GetTickCount();
+		if (theMenu['change' .. myHero.charName .. 'Skin']) then
 			if (theMenu['selected' .. myHero.charName .. 'Skin'] ~= lastSkin) then
 				lastSkin = theMenu['selected' .. myHero.charName .. 'Skin'];
 				SendSkinPacket(myHero.charName, skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']]);
 			end;
+		elseif (lastSkin ~= 0) then
+			lastSkin = 0;
+			SendSkinPacket(myHero.charName, nil);
 		end;
-	elseif (lastSkin ~= 0) then
-		lastSkin = 0;
-		SendSkinPacket(myHero.charName, nil);
 	end;
 end;
 
