@@ -1,4 +1,4 @@
--- LoL Patch: 5.14
+-- LoL Patch: 5.15
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
 local sVersion = '1.0';
@@ -634,7 +634,7 @@ local spellRanges = {
 		['q'] = {680, 680, 680, 680, 680},
 		['w'] = 0,
 		['e'] = 0,
-		['r'] = {230, 230, 230},
+		['r'] = {300, 600, 900},
 	},
 	['thresh'] = {
 		['q'] = {1075, 1075, 1075, 1075, 1075},
