@@ -1,4 +1,3 @@
--- LoL Patch: 5.15
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
 local sVersion = '1.0';
