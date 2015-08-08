@@ -1,6 +1,6 @@
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.1';
+local sVersion = '1.2';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_masterFlash.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
@@ -35,6 +35,8 @@ function OnLoad()
 	end;
 	
 	InitMenu();
+	
+	print('<font color="#FF1493"><b>[p_masterFlash]</b> </font><font color="#00EE00">Loaded Successfully</font>');
 end;
 
 function OnDraw()
@@ -76,10 +78,10 @@ end;
 function OnSendPacket(sPacket)
 	if (canBeUsed) then
 		if ((theMenu.replaceOriginal) and (VIP_USER)) then
-			if (sPacket.header == 0x0007) then		
+			if (sPacket.header == 0xE4) then		
 				if (myHero:CanUseSpell(flashSpell) == READY) then
-					sPacket.pos = 18;
-					if (sPacket:Decode1() == 0x00B0) then
+					sPacket.pos = 6;
+					if (sPacket:Decode2() == 0xF896) then
 						if (not flashPlease) then
 							sPacket:Block();
 							MasterFlash();
