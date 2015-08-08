@@ -1,6 +1,7 @@
+-- LoL Patch: 5.15
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.1';
+local sVersion = '1.2';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_skinChanger.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
@@ -19,6 +20,7 @@ if (not VIP_USER) then
 	print('<font color="#FF1493"><b>[p_skinChanger]</b> </font><font color="#FF0000">Non-VIP Not Supported</font>');
 	return;
 end;
+
 
 local skinNames = {
 	['aatrox'] = {
@@ -103,10 +105,16 @@ local skinNames = {
 	},
 	['bard'] = {
 		[1] = 'Bard',
+		[3] = 'Bard Chroma (1)',
+		[4] = 'Bard Chroma (2)',
+		[5] = 'Bard Chroma (3)',
 		[2] = 'Elderwood Bard',
 	},
 	['blitzcrank'] = {
 		[1] = 'Blitzcrank',
+		[9] = 'Blitzcrank Chroma (1)',
+		[10] = 'Blitzcrank Chroma (2)',
+		[11] = 'Blitzcrank Chroma (3)',
 		[2] = 'Rusty Blitzcrank',
 		[3] = 'Goalkeeper Blitzcrank',
 		[4] = 'Boom Boom Blitzcrank',
@@ -129,6 +137,9 @@ local skinNames = {
 	},
 	['caitlyn'] = {
 		[1] = 'Caitlyn',
+		[8] = 'Caitlyn Chroma (1)',
+		[9] = 'Caitlyn Chroma (2)',
+		[10] = 'Caitlyn Chroma (3)',
 		[2] = 'Resistance Caitlyn',
 		[3] = 'Sheriff Caitlyn',
 		[4] = 'Safari Caitlyn',
@@ -138,6 +149,9 @@ local skinNames = {
 	},
 	['cassiopeia'] = {
 		[1] = 'Cassiopeia',
+		[6] = 'Cassiopeia Chroma (1)',
+		[7] = 'Cassiopeia Chroma (2)',
+		[8] = 'Cassiopeia Chroma (3)',
 		[2] = 'Desperada Cassiopeia',
 		[3] = 'Siren Cassiopeia',
 		[4] = 'Mythic Cassiopeia',
@@ -164,6 +178,9 @@ local skinNames = {
 	},
 	['darius'] = {
 		[1] = 'Darius',
+		[6] = 'Darius Chroma (1)',
+		[7] = 'Darius Chroma (2)',
+		[8] = 'Darius Chroma (3)',
 		[2] = 'Lord Darius',
 		[3] = 'Bioforge Darius',
 		[4] = 'Woad King Darius',
@@ -239,10 +256,14 @@ local skinNames = {
 	},
 	['fizz'] = {
 		[1] = 'Fizz',
+		[7] = 'Fizz Chroma (1)',
+		[8] = 'Fizz Chroma (2)',
+		[9] = 'Fizz Chroma (3)',
 		[2] = 'Atlantean Fizz',
 		[3] = 'Tundra Fizz',
 		[4] = 'Fisherman Fizz',
 		[5] = 'Void Fizz',
+		[6] = 'Cottontail Fizz',
 	},
 	['galio'] = {
 		[1] = 'Galio',
@@ -260,9 +281,13 @@ local skinNames = {
 		[5] = 'Toy Soldier Gangplank',
 		[6] = 'Special Forces Gangplank',
 		[7] = 'Sultan Gangplank',
+		[8] = 'Captain Gangplank',
 	},
 	['garen'] = {
 		[1] = 'Garen',
+		[9] = 'Garen Chroma (1)',
+		[10] = 'Garen Chroma (2)',
+		[11] = 'Garen Chroma (3)',
 		[2] = 'Sanguine Garen',
 		[3] = 'Desert Trooper Garen',
 		[4] = 'Commando Garen',
@@ -346,6 +371,9 @@ local skinNames = {
 		[6] = 'Jaximus',
 		[7] = 'Temple Jax',
 		[8] = 'Nemesis Jax',
+		[10] = 'Nemesis Jax Chroma (1)',
+		[11] = 'Nemesis Jax Chroma (2)',
+		[12] = 'Nemesis Jax Chroma (3)',
 		[9] = 'SKT T1 Jax',
 	},
 	['jayce'] = {
@@ -375,6 +403,9 @@ local skinNames = {
 		[2] = 'Phantom Karthus',
 		[3] = 'Statue of Karthus',
 		[4] = 'Grim Reaper Karthus',
+		[7] = 'Grim Reaper Karthus Chroma (1)',
+		[8] = 'Grim Reaper Karthus Chroma (2)',
+		[9] = 'Grim Reaper Karthus Chroma (3)',
 		[5] = 'Pentakill Karthus',
 		[6] = 'Fnatic Karthus',
 	},
@@ -442,6 +473,9 @@ local skinNames = {
 		[2] = 'Traditional Lee Sin',
 		[3] = 'Acolyte Lee Sin',
 		[4] = 'Dragon Fist Lee Sin',
+		[9] = 'Dragon Fist Lee Sin Chroma (1)',
+		[10] = 'Dragon Fist Lee Sin Chroma (2)',
+		[11] = 'Dragon Fist Lee Sin Chroma (3)',
 		[5] = 'Muay Thai Lee Sin',
 		[6] = 'Pool Party Lee Sin',
 		[7] = 'SKT T1 Lee Sin',
@@ -453,6 +487,9 @@ local skinNames = {
 		[3] = 'Defender Leona',
 		[4] = 'Iron Solari Leona',
 		[5] = 'Pool Party Leona',
+		[6] = 'Pool Party Leona Chroma (1)',
+		[7] = 'Pool Party Leona Chroma (2)',
+		[8] = 'Pool Party Leona Chroma (3)',
 	},
 	['lissandra'] = {
 		[1] = 'Lissandra',
@@ -461,6 +498,9 @@ local skinNames = {
 	},
 	['lucian'] = {
 		[1] = 'Lucian',
+		[4] = 'Lucian Chroma (1)',
+		[5] = 'Lucian Chroma (2)',
+		[6] = 'Lucian Chroma (3)',
 		[2] = 'Hired Gun Lucian',
 		[3] = 'Striker Lucian',
 	},
@@ -513,6 +553,9 @@ local skinNames = {
 		[4] = 'Ionia Master Yi',
 		[5] = 'Samurai Yi',
 		[6] = 'Headhunter Master Yi',
+		[7] = 'Headhunter Master Yi Chroma (1)',
+		[8] = 'Headhunter Master Yi Chroma (2)',
+		[9] = 'Headhunter Master Yi Chroma (3)',
 	},
 	['missfortune'] = {
 		[1] = 'Miss Fortune',
@@ -542,6 +585,9 @@ local skinNames = {
 	},
 	['morgana'] = {
 		[1] = 'Morgana',
+		[8] = 'Morgana Chroma (1)',
+		[9] = 'Morgana Chroma (2)',
+		[10] = 'Morgana Chroma (3)',
 		[2] = 'Exiled Morgana',
 		[3] = 'Sinful Succulence Morgana',
 		[4] = 'Blade Mistress Morgana',
@@ -552,6 +598,9 @@ local skinNames = {
 	['nami'] = {
 		[1] = 'Nami',
 		[2] = 'Koi Nami',
+		[5] = 'Koi Nami Chroma (1)',
+		[6] = 'Koi Nami Chroma (2)',
+		[7] = 'Koi Nami Chroma (3)',
 		[3] = 'River Spirit Nami',
 		[4] = 'Urf the Nami-tee',
 	},
@@ -560,6 +609,9 @@ local skinNames = {
 		[2] = 'Galactic Nasus',
 		[3] = 'Pharaoh Nasus',
 		[4] = 'Dreadknight Nasus',
+		[8] = 'Dreadknight Nasus Chroma (1)',
+		[9] = 'Dreadknight Nasus Chroma (2)',
+		[10] = 'Dreadknight Nasus Chroma (3)',
 		[5] = 'Riot K-9 Nasus',
 		[6] = 'Infernal Nasus',
 		[7] = 'Archduke Nasus',
@@ -834,6 +886,9 @@ local skinNames = {
 		[5] = 'Guerilla Tristana',
 		[6] = 'Buccaneer Tristana',
 		[7] = 'Rocket Girl Tristana',
+		[8] = 'Rocket Girl Tristana Chroma (1)',
+		[9] = 'Rocket Girl Tristana Chroma (2)',
+		[10] = 'Rocket Girl Tristana Chroma (3)',
 	},
 	['trundle'] = {
 		[1] = 'Trundle',
@@ -899,6 +954,9 @@ local skinNames = {
 		[2] = 'Vindicator Vayne',
 		[3] = 'Aristocrat Vayne',
 		[4] = 'Dragonslayer Vayne',
+		[8] = 'Dragonslayer Vayne Chroma (1)',
+		[9] = 'Dragonslayer Vayne Chroma (2)',
+		[10] = 'Dragonslayer Vayne Chroma (3)',
 		[5] = 'Heartseeker Vayne',
 		[6] = 'SKT T1 Vayne',
 		[7] = 'Arclight Vayne',
@@ -986,6 +1044,9 @@ local skinNames = {
 	},
 	['zac'] = {
 		[1] = 'Zac',
+		[4] = 'Zac Chroma (1)',
+		[5] = 'Zac Chroma (2)',
+		[6] = 'Zac Chroma (3)',
 		[2] = 'Special Weapon Zac',
 		[3] = 'Pool Party Zac',
 	},
@@ -1018,16 +1079,18 @@ local skinNames = {
 	},
 };
 local skinsPB = {
-	[1] = {0x00, 0x00, 0x00, 0x00},
-	[2] = {0xB8, 0xBC, 0xBC, 0xBC},
-	[3] = {0xBE, 0xBC, 0xBC, 0xBC},
-	[4] = {0xBA, 0xBC, 0xBC, 0xBC},
-	[5] = {0xBD, 0xBC, 0xBC, 0xBC},
-	[6] = {0xB9, 0xBC, 0xBC, 0xBC},
-	[7] = {0xBF, 0xBC, 0xBC, 0xBC},
-	[8] = {0xBB, 0xBC, 0xBC, 0xBC},
-	[9] = {0x3D, 0xBC, 0xBC, 0xBC},
-	[10] = {0x39, 0xBC, 0xBC, 0xBC},
+	[1] = {0x0B, 0x0B, 0x0B, 0x0B},
+	[2] = {0x38, 0x0B, 0x0B, 0x0B},
+	[3] = {0xA2, 0x0B, 0x0B, 0x0B},
+	[4] = {0xE2, 0x0B, 0x0B, 0x0B},
+	[5] = {0xE9, 0x0B, 0x0B, 0x0B},
+	[6] = {0xC3, 0x0B, 0x0B, 0x0B},
+	[7] = {0x34, 0x0B, 0x0B, 0x0B},
+	[8] = {0xB7, 0x0B, 0x0B, 0x0B},
+	[9] = {0xCC, 0x0B, 0x0B, 0x0B},
+	[10] = {0x5E, 0x0B, 0x0B, 0x0B},
+	[11] = {0xD4, 0x0B, 0x0B, 0x0B},
+	[12] = {0x4E, 0x0B, 0x0B, 0x0B},
 };
 
 if (skinNames[string.lower(myHero.charName)] == nil) then
@@ -1083,23 +1146,31 @@ function InitMenu()
 end;
 
 function SendSkinPacket(mObject, skinPB)
-	local mP = CLoLPacket(0x55);
+	local mP = CLoLPacket(0xB6);
 	
-	mP.vTable = 0xEFD958;
+	mP.vTable = 0xEF2C88;
 	
 	mP:EncodeF(myHero.networkID);
+	mP:Encode1(0x09);
+	
+	mP:Encode1(0x00);
+	mP:Encode1(0x00);
+	
+	mP:Encode1(0x78);
+	mP:Encode1(0x78);
+	mP:Encode1(0x5D);
+	mP:Encode1(0x53);
+	
 	if (skinPB == nil) then
-		mP:Encode1(0xE3);
-		mP:Encode1(0xE3);
-		mP:Encode1(0xE3);
-		mP:Encode1(0xE3);
+		mP:Encode1(0xC1);
+		mP:Encode1(0xC1);
+		mP:Encode1(0xC1);
+		mP:Encode1(0xC1);
 	else
 		for _, pH in ipairs(skinPB) do
 			mP:Encode1(pH);
 		end;
 	end;
-	
-	mP:Encode1(0x72);
 
 	for I = 1, string.len(mObject) do
 		mP:Encode1(string.byte(string.sub(mObject, I, I)));
@@ -1109,7 +1180,7 @@ function SendSkinPacket(mObject, skinPB)
 		mP:Encode1(0x00);
 	end;
 
-	mP:Encode1(0x0B);
+	mP:Encode1(0x05);
 	
 	for I = 1, 3 do
 		mP:Encode1(0x00);
@@ -1118,6 +1189,10 @@ function SendSkinPacket(mObject, skinPB)
 	mP:Encode1(0x0F);
 	
 	for I = 1, 3 do
+		mP:Encode1(0x00);
+	end;
+	
+	for I = 1, 4 do
 		mP:Encode1(0x00);
 	end;
 	

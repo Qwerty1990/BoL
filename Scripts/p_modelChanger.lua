@@ -385,7 +385,6 @@ function gTKV(theTable, rMode)
 end;
 
 function SendModelPacket(mObject)
-	--print('sending ' .. mObject);
 	local mP = CLoLPacket(0xB6);
 	
 	mP.vTable = 0xEF2C88;
