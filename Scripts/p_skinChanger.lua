@@ -1,7 +1,6 @@
--- LoL Patch: 5.15
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.2';
+local sVersion = '1.3';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_skinChanger.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
@@ -1101,6 +1100,8 @@ else
 end;
 
 local theMenu = nil;
+local ballCreated = false;
+local ballMoving = false;
 local lastTimeTickCalled = 0;
 local lastSkin = 0;
 
@@ -1111,7 +1112,7 @@ function OnLoad()
 		theMenu['change' .. myHero.charName .. 'Skin'] = false;
 		theMenu['selected' .. myHero.charName .. 'Skin'] = 1;
 	elseif (theMenu['change' .. myHero.charName .. 'Skin']) then
-			SendSkinPacket(myHero.charName, skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']]);
+			SendSkinPacket(myHero.charName, skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']], myHero.networkID);
 	end;
 	
 	print('<font color="#FF1493"><b>[p_skinChanger]</b> </font><font color="#00EE00">Loaded Successfully</font>');
@@ -1119,7 +1120,15 @@ end;
 
 function OnUnload()
 	if (theMenu['change' .. myHero.charName .. 'Skin']) then
-		SendSkinPacket(myHero.charName, nil);
+		if (myHero.charName == 'Orianna') then
+			if (ballCreated) then
+				SendSkinPacket('OriannaNoBall', nil, myHero.networkID);
+			else
+				SendSkinPacket('Orianna', nil, myHero.networkID);
+			end;
+		else
+			SendSkinPacket(myHero.charName, nil, myHero.networkID);
+		end;
 	end;
 end;
 
@@ -1129,11 +1138,72 @@ function OnTick()
 		if (theMenu['change' .. myHero.charName .. 'Skin']) then
 			if (theMenu['selected' .. myHero.charName .. 'Skin'] ~= lastSkin) then
 				lastSkin = theMenu['selected' .. myHero.charName .. 'Skin'];
-				SendSkinPacket(myHero.charName, skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']]);
+				if (myHero.charName == 'Orianna') then
+					if (ballCreated) then
+						SendSkinPacket('OriannaNoBall', skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']], myHero.networkID);
+					else
+						SendSkinPacket('Orianna', skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']], myHero.networkID);
+					end;
+				else
+					SendSkinPacket(myHero.charName, skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']], myHero.networkID);
+				end;
 			end;
 		elseif (lastSkin ~= 0) then
 			lastSkin = 0;
-			SendSkinPacket(myHero.charName, nil);
+			SendSkinPacket(myHero.charName, nil, myHero.networkID);
+		end;
+	end;
+end;
+
+function OnRecvPacket(rPacket)
+	if (theMenu['change' .. myHero.charName .. 'Skin']) then
+		if (myHero.charName == 'Orianna') then
+			if (rPacket.header == 0xB6) then
+				rPacket.pos = 17;
+				local pS1 = rPacket:Decode4();
+				local pS2 = rPacket:Decode4();
+				local pS3 = rPacket:Decode2();
+				local pS4 = rPacket:Decode2();
+				local pS5 = rPacket:Decode1();
+				if ((ballCreated) or ((pS1 == 0x6169724F) and (pS2 == 0x4E616E6E) and (pS3 == 0x426F) and (pS4 == 0x6C61) and (pS5 == 0x6C))) then
+					SendSkinPacket('OriannaNoBall', skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']], myHero.networkID);
+				end;
+				rPacket:Replace4(0x00, 2);
+			end;
+		end;
+	end;
+end;
+
+function OnProcessSpell(tUnit, tSpell)
+	if ((tUnit.isMe) and (tSpell.name == 'OrianaRedactCommand')) then
+		ballMoving = true;
+	end;
+	
+	if ((tUnit.isMe) and (tSpell.name == 'OrianaIzunaCommand')) then
+		ballMoving = true;
+	end;
+end;
+
+function OnCreateObj(tObj)
+	if (myHero.charName == 'Orianna') then
+		if ((tObj.valid) and (tObj.name == 'TheDoomBall')) then
+			ballCreated = true;
+			ballMoving = false;
+			if (theMenu['change' .. myHero.charName .. 'Skin']) then
+				SendSkinPacket('OriannaBall', skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']], tObj.networkID);
+				SendSkinPacket('OriannaNoBall', skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']], myHero.networkID);
+			end;
+		end;
+	end;
+end;
+
+function OnDeleteObj(tObj)
+	if (myHero.charName == 'Orianna') then
+		if ((tObj.valid) and (((tObj.name:find('Orianna_Base_Z_ball_glow_green') ~= nil) and (not ballMoving)) or (tObj.name:find('Orianna_Base_Z_Flash') ~= nil))) then
+			ballCreated = false;
+			if (theMenu['change' .. myHero.charName .. 'Skin']) then
+				SendSkinPacket('Orianna', skinsPB[theMenu['selected' .. myHero.charName .. 'Skin']], myHero.networkID);
+			end;
 		end;
 	end;
 end;
@@ -1145,12 +1215,12 @@ function InitMenu()
 	theMenu:addParam('selected' .. myHero.charName .. 'Skin', 'Selected Skin', SCRIPT_PARAM_LIST, 1, skinNames);
 end;
 
-function SendSkinPacket(mObject, skinPB)
+function SendSkinPacket(mObject, skinPB, networkID)
 	local mP = CLoLPacket(0xB6);
 	
 	mP.vTable = 0xEF2C88;
 	
-	mP:EncodeF(myHero.networkID);
+	mP:EncodeF(networkID);
 	mP:Encode1(0x09);
 	
 	mP:Encode1(0x00);
