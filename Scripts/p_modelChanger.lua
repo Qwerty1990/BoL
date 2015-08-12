@@ -34,7 +34,7 @@ function orderedTable.insert(theTable, theKey, theValue)
     end;
 end;
 
-local function find(theTable, theValue)
+local function tableFind(theTable, theValue)
     for I, tV in ipairs(theTable) do
         if (tV == theValue) then
             return I;
@@ -46,7 +46,7 @@ function orderedTable.remove(theTable, theKey)
     local theValue = theTable._values[theKey];
 
     if (theValue ~= nil) then
-        table.remove(theTable._keys, find(theTable._keys, theKey));
+        table.remove(theTable._keys, tableFind(theTable._keys, theKey));
         theTable._values[theKey] = nil;
     end;
 
