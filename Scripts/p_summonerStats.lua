@@ -1,6 +1,6 @@
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.0';
+local sVersion = '1.1';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_summonerStats.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
@@ -16,6 +16,7 @@ else
 end;
 
 local summonersData = {};
+local platformIDs = {['BR1'] = 'BR', ['EUN1'] = 'EUNE', ['EUW1'] = 'EUW', ['KR'] = 'KR', ['LA1'] = 'LAN', ['LA2'] = 'LAS', ['NA1'] = 'NA', ['OC1'] = 'OCE', ['RU'] = 'RU', ['TR1'] = 'TR'};
 local lastTick = 0;
 local lastOption = 0;
 local boxW = 250;
@@ -58,7 +59,6 @@ function OnLoad()
 	InitMenu();
 
 	ResetOptions(nil);
-	
 	lTCP = lSocket.tcp();
 	lTCP:settimeout(0, 'b');
 	lTCP:connect('bol.pvpsuite.net', 80);
@@ -95,9 +95,19 @@ function OnTick()
 			end;
 			
 			if (currentGameData == nil) then
-				print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FFFF00">Please Wait</font>');
-				loadGameData = true;
-				ResetOptions(nil);
+				if (loadingGameData == true) then
+					print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FFFF00">Please Wait</font>');
+				else
+					ResetOptions(nil);
+					lTCP = lSocket.tcp();
+					lTCP:settimeout(0, 'b');
+					lTCP:connect('bol.pvpsuite.net', 80);
+					lastTick = GetTickCount() + 500;
+					tempGameData = '';
+					loadingGameData = true;
+					
+					print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FFFF00">Loading Game Data</font>');
+				end;
 			elseif ((toCheck ~= 0) and (lastOption ~= toCheck)) then
 					ShowSummonerData(toCheck);
 			end;
@@ -111,40 +121,48 @@ function OnTick()
 		end;
 		
 		if (loadingGameData) then
-			local fString, cStatus, pString = lTCP:receive(1024);
-			
-			if (cStatus == 'timeout') then
-				lTCP:send('GET /game.php?name=' .. encodeForURL(summonerName) .. '&server=euw HTTP/1.1' .. CRLF .. 'Host: bol.pvpsuite.net' .. CRLF .. 'User-Agent: Bot of Legends 1.0' .. CRLF .. CRLF);
-			end;
-			
-			if ((fString) or (#pString > 0)) then
-				tempGameData = tempGameData .. (fString or pString);
-			end;
-			
-			if (tempGameData:find('<script>.+</script>') ~= nil) then
-				currentGameData = tempGameData:match('<script>(.+)</script>');
-				if (not currentGameData) then
-					print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FF0000">Could Not Read Game Data</font>');
-				else
-					currentGameData = JSON:decode(currentGameData);
-					
-					if ((currentGameData['error'] ~= nil) and (currentGameData['message'] ~= nil)) then
-						print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FF0000">Error ' .. currentGameData['error'] .. ' (' .. currentGameData['message']:lower() .. ')</font>');
-						currentGameData = nil;
-					else
-						for _, summonerData in pairs(currentGameData) do
-							if ((summonerData ~= nil) and (summonerData['summoner_name'] ~= nil)) then
-								summonersData[summonerData['summoner_name']] = summonerData;
-							end;
-						end;
-						
-						print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#00EE00">Game Data Loaded</font>');
-					end;
-					
-				end;
-				
+			if (platformIDs[GetGameRegion():upper()] == nil) then
+				print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FF0000">Could Not Read Game Region</font>');
 				loadingGameData = false;
 				lTCP:close();
+			else
+				local fString, cStatus, pString = lTCP:receive(1024);
+				
+				if (cStatus == 'timeout') then
+					lTCP:send('GET /game.php?name=' .. encodeForURL(summonerName) .. '&server=' .. platformIDs[GetGameRegion():upper()]:lower() .. ' HTTP/1.1' .. CRLF .. 'Host: bol.pvpsuite.net' .. CRLF .. 'User-Agent: Bot of Legends 1.0' .. CRLF .. CRLF);
+				end;
+				
+				if ((fString) or (#pString > 0)) then
+					tempGameData = tempGameData .. (fString or pString);
+				end;
+				
+				if (tempGameData:find('<script>.+</script>') ~= nil) then
+					currentGameData = tempGameData:match('<script>(.+)</script>');
+					if (not currentGameData) then
+						print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FF0000">Could Not Read Game Data</font>');
+					else
+						currentGameData = JSON:decode(currentGameData);
+						
+						if ((currentGameData['error'] ~= nil) and (currentGameData['message'] ~= nil)) then
+							print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FF0000">Error ' .. currentGameData['error'] .. ' (' .. currentGameData['message']:lower() .. ')</font>');
+							currentGameData = nil;
+							loadingGameData = false;
+							lTCP:close();
+						else
+							for _, summonerData in pairs(currentGameData) do
+								if ((summonerData ~= nil) and (summonerData['summoner_name'] ~= nil)) then
+									summonersData[summonerData['summoner_name']] = summonerData;
+								end;
+							end;
+							
+							print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#00EE00">Game Data Loaded</font>');
+						end;
+						
+					end;
+					
+					loadingGameData = false;
+					lTCP:close();
+				end;
 			end;
 		end;
 	end;
