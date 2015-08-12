@@ -1,6 +1,6 @@
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.1';
+local sVersion = '1.2';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_summonerStats.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
@@ -35,7 +35,7 @@ function GetSummoners()
 	
 	for I = 1, heroManager.iCount do
 		local theHero = heroManager:GetHero(I);
-		if ((theHero.networkID ~= myHero.networkID) and (theHero.controlled == 1)) then
+		if (theHero.networkID ~= myHero.networkID) then
 			tSummoners[#tSummoners + 1] = theHero;
 		end;
 	end;
