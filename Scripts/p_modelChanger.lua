@@ -1,6 +1,6 @@
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.0';
+local sVersion = '1.1';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_modelChanger.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
@@ -229,6 +229,24 @@ function OnTick()
 					SendModelPacket(getModelObject(activeOption, menuOption));
 				end;
 			end;
+			
+			if (theMenu.castSpells.castStatus) then
+				if (theMenu.castSpells.Q) then
+					CastSpell(_Q);
+				end;
+				
+				if (theMenu.castSpells.W) then
+					CastSpell(_W);
+				end;
+				
+				if (theMenu.castSpells.E) then
+					CastSpell(_E);
+				end;
+				
+				if (theMenu.castSpells.R) then
+					CastSpell(_R);
+				end;
+			end;
 		elseif (lastActiveOption ~= 1) then
 			initPacketSent = false;
 			lastActiveOption = 1;
@@ -254,7 +272,12 @@ function InitMenu()
 	theMenu = scriptConfig('p_modelChanger', 'p_modelChanger');
 	theMenu:addParam('saveModel', 'Save Model', SCRIPT_PARAM_ONOFF, false);
 	theMenu:addParam('changeModel', 'Change Model', SCRIPT_PARAM_ONOFF, false);
-	
+	theMenu:addSubMenu('Cast Spells', 'castSpells');
+	theMenu.castSpells:addParam('castStatus', 'Cast Status', SCRIPT_PARAM_ONOFF, true);
+	theMenu.castSpells:addParam('Q', 'Cast Q', SCRIPT_PARAM_ONKEYDOWN, false, GetKey('Q'));
+	theMenu.castSpells:addParam('W', 'Cast W', SCRIPT_PARAM_ONKEYDOWN, false, GetKey('W'));
+	theMenu.castSpells:addParam('E', 'Cast E', SCRIPT_PARAM_ONKEYDOWN, false, GetKey('E'));
+	theMenu.castSpells:addParam('R', 'Cast R', SCRIPT_PARAM_ONKEYDOWN, false, GetKey('R'));
 	theMenu:addParam('championTransforms', 'Champion Transforms', SCRIPT_PARAM_LIST, 1, getTableKeys(championTransformObjects));
 	theMenu:addParam('championExtras', 'Champion Extras', SCRIPT_PARAM_LIST, 1, getTableKeys(championExtraObjects));
 	theMenu:addParam('cutenessOverload', 'Cuteness Overload', SCRIPT_PARAM_LIST, 1, getTableKeys(cuteObjects));
