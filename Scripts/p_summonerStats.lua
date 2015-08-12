@@ -34,7 +34,7 @@ function GetSummoners()
 	
 	for I = 1, heroManager.iCount do
 		local theHero = heroManager:GetHero(I);
-		if (theHero.networkID ~= myHero.networkID) then
+		if ((theHero.networkID ~= myHero.networkID) and (theHero.controlled == 1)) then
 			tSummoners[#tSummoners + 1] = theHero;
 		end;
 	end;
