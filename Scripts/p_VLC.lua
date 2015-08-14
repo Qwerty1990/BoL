@@ -1,13 +1,13 @@
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.0';
+local sVersion = '1.1';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_VLC.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
 	if (tonumber(sVersion) < tonumber(rVersion)) then
 		print('<font color="#FF1493"><b>[p_VLC]</b> </font><font color="#FFFF00">An update has been found and it is now downloading!</font>');
 		DownloadFile('https://raw.githubusercontent.com/pvpsuite/BoL/master/Scripts/p_VLC.lua?no-cache=' .. math.random(1, 25000), (SCRIPT_PATH.. GetCurrentEnv().FILE_NAME), function()
-			print('<font color="#FF1493"><b>[p_VLC]</b> </font><font color="#00FF00">Script successfully updated, please double-press F9 to reload!</font>');
+			print('<font color="#FF1493"><b>[p_VLC]</b> </font><font color="#00FF00">Script has been updated, please reload!</font>');
 		end);
 		return;
 	end;
@@ -165,10 +165,10 @@ function OnDraw()
 				readingSong = true;
 			end;
 		end;
-		local theSongW = getStringHitbox(theSong);
-		local theArtistW = getStringHitbox(theArtist);
-		DrawText(theSong, 12, (theMenu.drawW + (backgroundW / 2) - (theSongW / 2)), theMenu.drawH + 5, RGBA(30, 30, 30, theMenu.playerOpacity));
-		DrawText(theArtist, 14, (theMenu.drawW + (backgroundW / 2) - (theArtistW / 2)), theMenu.drawH + 20, RGBA(30, 30, 30, theMenu.playerOpacity));
+		local theSongA = GetTextArea(theSong, 12);
+		local theArtistA = GetTextArea(theArtist, 14);
+		DrawText(theSong, 12, (theMenu.drawW + (backgroundW / 2) - (theSongA.x / 2)), theMenu.drawH + 5, RGBA(30, 30, 30, theMenu.playerOpacity));
+		DrawText(theArtist, 14, (theMenu.drawW + (backgroundW / 2) - (theArtistA.x / 2)), theMenu.drawH + 20, RGBA(30, 30, 30, theMenu.playerOpacity));
 	end;
 end;
 
@@ -302,49 +302,6 @@ function readCurrentSong()
 		lastPlayedSong = tF:read('*a');
 		tF:close();
 	end;
-end;
-
-function getStringHitbox(theString)
-	local charHBs = {
-		['A'] = 1.5,
-		['B'] = 1.5,
-		['C'] = 1.5,
-		['D'] = 1.5,
-		['E'] = 1.5,
-		['G'] = 1.5,
-		['H'] = 1.5,
-		['I'] = 1.5,
-		['J'] = 1.5,
-		['K'] = 1.5,
-		['L'] = 1.5,
-		['M'] = 1.5,
-		['N'] = 1.5,
-		['O'] = 1.5,
-		['P'] = 1.5,
-		['Q'] = 1.5,
-		['R'] = 1.5,
-		['S'] = 1.5,
-		['T'] = 1.5,
-		['U'] = 1.5,
-		['V'] = 1.5,
-		['W'] = 1.5,
-		['X'] = 1.5,
-		['Y'] = 1.5,
-		['Z'] = 1.5,
-		[' '] = 0.5,
-	};
-	local theHB = 0;
-	
-	for I = 1, #theString do
-		local theChar = theString:sub(I, I);
-		if (charHBs[theChar] ~= nil) then
-			theHB = theHB + charHBs[theChar];
-		else
-			theHB = theHB + 1;
-		end;
-	end;
-	
-	return theHB * 5;
 end;
 
 function splitTable(theInput, theSeparator)

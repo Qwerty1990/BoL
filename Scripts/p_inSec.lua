@@ -7,7 +7,7 @@ if ((rVersion) and (tonumber(rVersion) ~= nil)) then
 	if (tonumber(sVersion) < tonumber(rVersion)) then
 		print('<font color="#FF1493"><b>[p_inSec]</b> </font><font color="#FFFF00">An update has been found and it is now downloading!</font>');
 		DownloadFile('https://raw.githubusercontent.com/pvpsuite/BoL/master/Scripts/p_inSec.lua?no-cache=' .. math.random(1, 25000), (SCRIPT_PATH.. GetCurrentEnv().FILE_NAME), function()
-			print('<font color="#FF1493"><b>[p_inSec]</b> </font><font color="#00FF00">Script successfully updated, please double-press F9 to reload!</font>');
+			print('<font color="#FF1493"><b>[p_inSec]</b> </font><font color="#00FF00">Script has been updated, please reload!</font>');
 		end);
 		return;
 	end;

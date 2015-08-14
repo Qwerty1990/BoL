@@ -1,13 +1,13 @@
 -- Developer: PvPSuite (http://forum.botoflegends.com/user/76516-pvpsuite/)
 
-local sVersion = '1.2';
+local sVersion = '1.3';
 local rVersion = GetWebResult('raw.githubusercontent.com', '/pvpsuite/BoL/master/Versions/Scripts/p_summonerStats.version?no-cache=' .. math.random(1, 25000));
 
 if ((rVersion) and (tonumber(rVersion) ~= nil)) then
 	if (tonumber(sVersion) < tonumber(rVersion)) then
 		print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FFFF00">An update has been found and it is now downloading!</font>');
 		DownloadFile('https://raw.githubusercontent.com/pvpsuite/BoL/master/Scripts/p_summonerStats.lua?no-cache=' .. math.random(1, 25000), (SCRIPT_PATH.. GetCurrentEnv().FILE_NAME), function()
-			print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#00FF00">Script successfully updated, please double-press F9 to reload!</font>');
+			print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#00FF00">Script has been updated, please reload!</font>');
 		end);
 		return;
 	end;
@@ -235,7 +235,7 @@ function ShowSummonerData(summonerToCheck)
 	if (not gSummoners[summonerToCheck]) then
 		print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FF0000">Could Not Read Index ' .. summonerToCheck .. ' Data</font>');
 	elseif (not summonersData[gSummoners[summonerToCheck].name]) then
-		print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FF0000">Could Not Read ' .. gSummoners[summonerToCheck].charName .. ' Data</font>');
+		print('<font color="#FF1493"><b>[p_summonerStats]</b> </font><font color="#FF0000">Could Not Read ' .. GetChampionFriendlyName(gSummoners[summonerToCheck].charName) .. ' Data</font>');
 	else
 		local summonerData = summonersData[gSummoners[summonerToCheck].name];
 		drawSummoner = summonerData;
@@ -283,60 +283,39 @@ function ResetOptions(toCheck)
 end;
 
 function GetWordFromNumber(theNumber)
-	if (theNumber == 1) then
-		return 'One';
-	elseif (theNumber == 2) then
-			return 'Two';
-	elseif (theNumber == 3) then
-			return 'Three';
-	elseif (theNumber == 4) then
-			return 'Four';
-	elseif (theNumber == 5) then
-			return 'Five';
-	elseif (theNumber == 6) then
-			return 'Six';
-	elseif (theNumber == 7) then
-			return 'Seven';
-	elseif (theNumber == 8) then
-			return 'Eight';
-	elseif (theNumber == 9) then
-			return 'Nine';
-	end;
+	local numbersTable = {
+		[1] = 'One',
+		[2] = 'Two',
+		[3] = 'Three',
+		[4] = 'Four',
+		[5] = 'Five',
+		[6] = 'Six',
+		[7] = 'Seven',
+		[8] = 'Eight',
+		[9] = 'Nine',
+	};
 	
-	return 'Unknown';
+	return ((numbersTable[theNumber]) and (numbersTable[theNumber]) or ('Unknown'));
 end;
 
 function GetChampionFriendlyName(rName)
-	if (string.lower(rName) == string.lower('ChoGath')) then
-		return 'Cho\'Gath';
-	elseif (string.lower(rName) == string.lower('DrMundo')) then
-		return 'Dr. Mundo';
-	elseif (string.lower(rName) == string.lower('FiddleSticks')) then
-		return 'Fiddlesticks';
-	elseif (string.lower(rName) == string.lower('JarvanIV')) then
-		return 'Jarvan IV';
-	elseif (string.lower(rName) == string.lower('KhaZix')) then
-		return 'Kha\'Zix';
-	elseif (string.lower(rName) == string.lower('KogMaw')) then
-		return 'Kog\'Maw';
-	elseif (string.lower(rName) == string.lower('LeeSin')) then
-		return 'Lee Sin';
-	elseif (string.lower(rName) == string.lower('MasterYi')) then
-		return 'Master Yi';
-	elseif (string.lower(rName) == string.lower('MissFortune')) then
-		return 'Miss Fortune';
-	elseif (string.lower(rName) == string.lower('MonkeyKing')) then
-		return 'Wukong';
-	elseif (string.lower(rName) == string.lower('RekSai')) then
-		return 'Rek\'Sai';
-	elseif (string.lower(rName) == string.lower('TahmKench')) then
-		return 'Tahm Kench';
-	elseif (string.lower(rName) == string.lower('TwistedFate')) then
-		return 'Twisted Fate';
-	elseif (string.lower(rName) == string.lower('VelKoz')) then
-		return 'Vel\'Koz';
-	elseif (string.lower(rName) == string.lower('XinZhao')) then
-		return 'Xin Zhao';
-	end;
-	return rName;
+	local friendlyNames = {
+		['chogath'] = 'Cho\'Gath',
+		['drmundo'] = 'Dr. Mundo',
+		['fiddlesticks'] = 'Fiddlesticks',
+		['jarvaniv'] = 'Jarvan IV',
+		['khazix'] = 'Kha\'Zix',
+		['kogmaw'] = 'Kog\'Maw',
+		['leesin'] = 'Lee Sin',
+		['masteryi'] = 'Master Yi',
+		['missfortune'] = 'Miss Fortune',
+		['monkeyking'] = 'Wukong',
+		['reksai'] = 'Rek\'Sai',
+		['tahmkench'] = 'Tahm Kench',
+		['twistedfate'] = 'Twisted Fate',
+		['velkoz'] = 'Vel\'Koz',
+		['xinzhao'] = 'Xin Zhao',
+	};
+	
+	return ((friendlyNames[rName:lower()]) and (friendlyNames[rName:lower()]) or (rName));
 end;
